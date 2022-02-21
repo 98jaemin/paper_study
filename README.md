@@ -1,1 +1,1 @@
-# paper_study
+# Paper Study
