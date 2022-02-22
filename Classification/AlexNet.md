@@ -33,7 +33,7 @@ ImageNet은 다양한 사이즈의 이미지로 이루어져있다. 그러나 Al
 기존에 사용하던 activation 함수는 tanh 또는 sigmoid 함수였다. 학습 시간 면에서 이들보다 max(0, x)가 훨씬 빠르다. 이 함수를 사용한 뉴런을 ReLU(Rectified Linear Units)라고 부르기로 했다. Fig 1.은 4개의 layer를 갖는 CNN 모델이 CIFAR-10 데이터셋을 학습하여 25%의 training error에 도달하는 데에 걸리는 epoch을 나타낸다. 실선은 ReLU, 점선은 tanh을 이용한 모델이다.
 
 
-<p align="center"><img src="https://user-images.githubusercontent.com/86872735/155063648-90cbf655-65ca-483a-90f0-568672d9e77a.png" align="center"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/155063648-90cbf655-65ca-483a-90f0-568672d9e77a.png"></p>
 <p align="center">Fig 1. 학습속도 비교 </p>
 
 
@@ -46,5 +46,7 @@ ImageNet은 다양한 사이즈의 이미지로 이루어져있다. 그러나 Al
 "여기서 추가적인 기법이 있는데, 데이터를 두 개의 GPU로 나누어 학습시키다가 하나의 layer에서만 GPU를 통합시키는 것입니다. 논문에서는 3번째 Conv layer에서만 GPU를 통합시킨다고 말합니다. 이를 통해 계산량의 허용가능한 부분까지 통신량을 정확하게 조정할 수 있다고 나와있습니다"
 
 
-
-
+### 3.3 Local Response Normalization
+본 논문에서 아래와 같은 local normalization을 사용한다. 
+<p align='center'><img src="https://user-images.githubusercontent.com/86872735/155103756-a8f65efb-e7f9-4669-97fe-049f7e1c5765.png"></p>
+a는 (x,y) 좌표의 값에 커널 i를 적용한 값이고 k, n, alpha, beta는 하이퍼파라미터로 본 논문에서는 k=2, n=5, alpha=1e-4, beta=0.75로 설정하였다.
