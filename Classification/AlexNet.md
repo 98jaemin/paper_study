@@ -50,3 +50,12 @@ ImageNet은 다양한 사이즈의 이미지로 이루어져있다. 그러나 Al
 본 논문에서 아래와 같은 local normalization을 사용한다. 
 <p align='center'><img src="https://user-images.githubusercontent.com/86872735/155103756-a8f65efb-e7f9-4669-97fe-049f7e1c5765.png"></p>
 a는 (x,y) 좌표의 값에 커널 i를 적용한 값이고 k, n, alpha, beta는 하이퍼파라미터로 본 논문에서는 k=2, n=5, alpha=1e-4, beta=0.75로 설정하였다.
+
+
+### 3.4 Overlapping Pooling
+pooling layer는 동일한 kernel map 내의 이웃한 뉴런들의 정보를 요약하는 역할을 한다.
+전통적으로 pooling layer는 overlap 되지 않게(stride를 s, kernel size를 z라고 하면 s = z) 적용해 왔으나 본 논문에서는 overlap 되도록 (s < z) s = 2, z = 3 으로 설정하였다. 그 결과 성능이 향상되었으며 overfitting을 약간 방지하는 효과도 확인하였다.
+
+
+### 3.5 Overall Architecture
+
