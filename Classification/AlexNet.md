@@ -92,5 +92,16 @@ overfitting을 줄이는 가장 간단한 방법은 label-preserving transformat
 
 ### 4.2 Dropout
 여러 다른 모델의 예측을 결합하는 것은 test error를 줄이는 좋은 방법이지만 한번 학습하는데 며칠씩 걸리는 매우 큰 모델에는 적용하기 어렵다. 하지만 효율적으로 그러한 효과를 내는 방법이 바로 "dropout"이다. hidden layer의 각 뉴런은 0.5의 확률로 "drop out" 되며 제거된 뉴런은 예측에 참여하지 않는다. 따라서 매 입력마다 모델은 서로 다른 구조를 가지며 뉴런들은 더 robust한 특징들을 학습하게 된다.
+</br>
+</br>
 
+## 5. Details of learning
+* optimizer : Stochastic Gradient Descent
+* momentum : 0.9
+* weight decay : 0.0005
+* batch size : 128
+* weight 초기화 : N(0, 0.01^2)
+* bias 초기화
+ * 2, 4, 5 번째 convolutional layer, fully-connected layer : 1
+ * 1, 3 번째 convolutional layer : 0
 
