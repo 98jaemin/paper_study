@@ -29,7 +29,7 @@ ImageNet은 다양한 사이즈의 이미지로 이루어져있다. 그러나 Al
 ### 3.1 ReLU Nonlinearity
 기존에 사용하던 activation 함수는 tanh 또는 sigmoid 함수였다. 학습 시간 면에서 이들보다 max(0, x)가 훨씬 빠르다. 이 함수를 사용한 뉴런을 ReLU(Rectified Linear Units)라고 부르기로 했다. 아래 그림은 4개의 layer를 갖는 CNN 모델이 CIFAR-10 데이터셋을 학습하여 25%의 training error에 도달하는 데에 걸리는 epoch을 나타낸다. 실선은 ReLU, 점선은 tanh을 이용한 모델이다.
 
-<p align="center"><img src="https://user-images.githubusercontent.com/86872735/155063648-90cbf655-65ca-483a-90f0-568672d9e77a.png" width="55%"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/155063648-90cbf655-65ca-483a-90f0-568672d9e77a.png" width="35%"></p>
 
 
 본 논문이 기존 activation 함수의 대안을 제안한 최초의 사례는 아니다. Jarrett은 |tanh(x)| 함수를 이용하였고 좋은 성능을 냈다. 하지만 overfitting 방지와 빠른 학습의 면에서 ReLU가 더 효과적이다.
@@ -43,7 +43,7 @@ ImageNet은 다양한 사이즈의 이미지로 이루어져있다. 그러나 Al
 
 ### 3.3 Local Response Normalization
 본 논문에서 아래와 같은 local normalization을 사용한다. 
-<p align='center'><img src="https://user-images.githubusercontent.com/86872735/155103756-a8f65efb-e7f9-4669-97fe-049f7e1c5765.png" width="60%"></p>
+<p align='center'><img src="https://user-images.githubusercontent.com/86872735/155103756-a8f65efb-e7f9-4669-97fe-049f7e1c5765.png" width="40%"></p>
 a는 (x,y) 좌표의 값에 커널 i를 적용한 값이고 k, n, alpha, beta는 하이퍼파라미터로 본 논문에서는 k=2, n=5, alpha=1e-4, beta=0.75로 설정하였다.
 
 
