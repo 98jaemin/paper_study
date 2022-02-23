@@ -3,9 +3,6 @@
 </br>
 
 ## 1. Introduction
-수백만 장의 이미지를 학습하기 위해서는 더 큰 model capacity를 필요로 한다.
-CNN 모델은 비슷한 사이즈의 순방향 신경망보다 훨씬 적은 수의 파라미터를 사용하지만 성능은 거의 동일(slightly worse)하다.
-
 본 논문의 contribution은 다음과 같다:
 - 2010년과 2012년 ImageNet 대회의 데이터셋을 이용하여 역대급으로 큰 규모의 CNN 모델 학습
 - 여러 새로운 학습 기법을 사용 (3장에서 설명)
@@ -30,11 +27,9 @@ ImageNet은 다양한 사이즈의 이미지로 이루어져있다. 그러나 Al
 
 ## 3. Architecture
 ### 3.1 ReLU Nonlinearity
-기존에 사용하던 activation 함수는 tanh 또는 sigmoid 함수였다. 학습 시간 면에서 이들보다 max(0, x)가 훨씬 빠르다. 이 함수를 사용한 뉴런을 ReLU(Rectified Linear Units)라고 부르기로 했다. Fig 1.은 4개의 layer를 갖는 CNN 모델이 CIFAR-10 데이터셋을 학습하여 25%의 training error에 도달하는 데에 걸리는 epoch을 나타낸다. 실선은 ReLU, 점선은 tanh을 이용한 모델이다.
+기존에 사용하던 activation 함수는 tanh 또는 sigmoid 함수였다. 학습 시간 면에서 이들보다 max(0, x)가 훨씬 빠르다. 이 함수를 사용한 뉴런을 ReLU(Rectified Linear Units)라고 부르기로 했다. 아래 그림은 4개의 layer를 갖는 CNN 모델이 CIFAR-10 데이터셋을 학습하여 25%의 training error에 도달하는 데에 걸리는 epoch을 나타낸다. 실선은 ReLU, 점선은 tanh을 이용한 모델이다.
 
-
-<p align="center"><img src="https://user-images.githubusercontent.com/86872735/155063648-90cbf655-65ca-483a-90f0-568672d9e77a.png"></p>
-<p align="center">Fig 1. 학습속도 비교 </p>
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/155063648-90cbf655-65ca-483a-90f0-568672d9e77a.png" width="55%"></p>
 
 
 본 논문이 기존 activation 함수의 대안을 제안한 최초의 사례는 아니다. Jarrett은 |tanh(x)| 함수를 이용하였고 좋은 성능을 냈다. 하지만 overfitting 방지와 빠른 학습의 면에서 ReLU가 더 효과적이다.
@@ -48,7 +43,7 @@ ImageNet은 다양한 사이즈의 이미지로 이루어져있다. 그러나 Al
 
 ### 3.3 Local Response Normalization
 본 논문에서 아래와 같은 local normalization을 사용한다. 
-<p align='center'><img src="https://user-images.githubusercontent.com/86872735/155103756-a8f65efb-e7f9-4669-97fe-049f7e1c5765.png"></p>
+<p align='center'><img src="https://user-images.githubusercontent.com/86872735/155103756-a8f65efb-e7f9-4669-97fe-049f7e1c5765.png" width="60%"></p>
 a는 (x,y) 좌표의 값에 커널 i를 적용한 값이고 k, n, alpha, beta는 하이퍼파라미터로 본 논문에서는 k=2, n=5, alpha=1e-4, beta=0.75로 설정하였다.
 
 
@@ -58,4 +53,44 @@ pooling layer는 동일한 kernel map 내의 이웃한 뉴런들의 정보를 �
 
 
 ### 3.5 Overall Architecture
+<p align='center'><img src="https://user-images.githubusercontent.com/86872735/155250730-f199b8ee-07ed-445e-a3dc-8dfe30c80b9f.png"></p>
+
+네트워크는 5개의 convolutional layer와 3개의 fully-connected layer로 구성되며 마지막 fully-connected layer의 출력은 softmax 함수를 통해 1000개의 label 중 하나로 결정된다.
+
+* 1st Convolutional Layer
+  * input : 224x224x3
+  * kernel size : 11x11x3
+  * \# of kernels : 96
+  * stride : 4
+* Response Normalization + Max Pooling
+* 2nd Convolutional Layer
+  * kernel size : 5x5x48
+  * \# of kernels : 256
+* Response Normalization + Max Pooling
+* 3rd Convolutional Layer
+  * kernel size : 3x3x256
+  * \# of kernels : 384
+* 4th Convolutional Layer
+  * kernel size : 3x3x192
+  * \# of kernels : 384
+* 5th Convolutional Layer
+  * kernel size : 3x3x192
+  * \# of kernels : 256
+* Max Pooling (설명은 없으나 그림에 쓰여있음)
+* Fully-Connected Layer
+  * \# of neurons : 4096
+</br>
+</br>
+
+## 4. Reducing Overfitting
+### 4.1 Data Augmentation
+overfitting을 줄이는 가장 간단한 방법은 label-preserving transformation을 이용하여 이미지를 늘리는 것이다. 본 논문에서는 두 가지의 augmentation 방법을 사용하였다.
+
+첫 번째는 이미지의 이동과 수평 반전이다. 256x256 사이즈의 이미지에서 224x224 사이즈의 patch를 추출하여 학습에 이용하였다. 네 부분의 코너와 중앙 부분 중 하나를 선택하고 수평 반전 또한 적용되므로 하나의 이미지에 대해 10가지 경우 중 하나가 선택되는 것이다. 
+
+두 번째는 이미지의 RGB 값의 강도를 조절하는 것이다. RGB 픽셀 값에 주성분 분석을 실시한 뒤 고윳값에 비례하여 주성분의 배수를 이미지에 더했다 ??????????
+
+### 4.2 Dropout
+여러 다른 모델의 예측을 결합하는 것은 test error를 줄이는 좋은 방법이지만 한번 학습하는데 며칠씩 걸리는 매우 큰 모델에는 적용하기 어렵다. 하지만 효율적으로 그러한 효과를 내는 방법이 바로 "dropout"이다. hidden layer의 각 뉴런은 0.5의 확률로 "drop out" 되며 제거된 뉴런은 예측에 참여하지 않는다. 따라서 매 입력마다 모델은 서로 다른 구조를 가지며 뉴런들은 더 robust한 특징들을 학습하게 된다.
+
 
