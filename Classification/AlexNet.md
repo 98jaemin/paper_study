@@ -44,7 +44,7 @@ ImageNet은 다양한 사이즈의 이미지로 이루어져있다. 그러나 Al
 ### 3.3 Local Response Normalization
 일반적으로 ReLU는 전통적인 activation 함수와 달리 saturating 되지 않으므로 굳이 normalization을 추가하지 않아도 된다. 그러나 본 연구에서는 다음과 같은 normalization을 사용했을 때 일반화 성능이 향상되는 것을 확인했다. 
 <p align='center'><img src='https://user-images.githubusercontent.com/86872735/155460331-afb7e938-c5c3-481b-8e5b-d215b62a35c6.png' width='50%'></p>
-
+본 논문에서는 k=2, n=5, α=1E-5, β=0.75 를 사용하였다.
 
 
 ### 3.4 Overlapping Pooling
@@ -79,6 +79,8 @@ pooling layer는 동일한 kernel map 내의 이웃한 뉴런들의 정보를 �
 * Max Pooling (설명은 없으나 그림에 쓰여있음)
 * Fully-Connected Layer
   * \# of neurons : 4096
+
+\* *padding에 대한 설명이 없는 layer는 적당히 추가해야 하는 것 같다* \*
 </br>
 </br>
 
@@ -92,6 +94,8 @@ overfitting을 줄이는 가장 간단한 방법은 label-preserving transformat
 
 ### 4.2 Dropout
 여러 다른 모델의 예측을 결합하는 것은 test error를 줄이는 좋은 방법이지만 한번 학습하는데 며칠씩 걸리는 매우 큰 모델에는 적용하기 어렵다. 하지만 효율적으로 그러한 효과를 내는 방법이 바로 "dropout"이다. hidden layer의 각 뉴런은 0.5의 확률로 "drop out" 되며 제거된 뉴런은 예측에 참여하지 않는다. 따라서 매 입력마다 모델은 서로 다른 구조를 가지며 뉴런들은 더 robust한 특징들을 학습하게 된다.
+
+본 논문에서는 두 fully-connected layer 에서 사용하였다.
 </br>
 </br>
 
@@ -102,11 +106,11 @@ overfitting을 줄이는 가장 간단한 방법은 label-preserving transformat
 * batch size : 128
 * weight 초기화 : N(0, 0.01^2)
 * bias 초기화
- * 2, 4, 5 번째 convolutional layer, fully-connected layer : 1
- * 1, 3 번째 convolutional layer : 0
+  * 2, 4, 5 번째 convolutional layer, fully-connected layer : 1
+  * 1, 3 번째 convolutional layer : 0
 * learning rate : 0.01
- * validation error의 개선이 없으면 10으로 나누어 업데이트
- * 전체 학습 동안 3번 업데이트
+  * validation error의 개선이 없으면 10으로 나누어 업데이트
+  * 전체 학습 동안 3번 업데이트
 * epoch : 90
 
 ## 6. Results
