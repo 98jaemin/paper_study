@@ -86,9 +86,9 @@ pooling layer는 동일한 kernel map 내의 이웃한 뉴런들의 정보를 �
 ### 4.1 Data Augmentation
 overfitting을 줄이는 가장 간단한 방법은 label-preserving transformation을 이용하여 이미지를 늘리는 것이다. 본 논문에서는 두 가지의 augmentation 방법을 사용하였다.
 
-첫 번째는 이미지의 이동과 수평 반전이다. 256x256 사이즈의 이미지에서 224x224 사이즈의 patch를 추출하여 학습에 이용하였다. 네 부분의 코너와 중앙 부분 중 하나를 선택하고 수평 반전 또한 적용되므로 하나의 이미지에 대해 10가지 경우 중 하나가 선택되는 것이다. 
+첫 번째는 이미지의 이동과 수평 반전이다. 256x256 사이즈의 이미지에서 224x224 사이즈의 patch를 추출하여 학습에 이용하였다. 네 부분의 코너와 중앙 부분 중 하나를 선택하고 수평 반전 또한 적용되므로 하나의 원본 이미지를 10가지 경우로 늘리게 된다. 
 
-두 번째는 이미지의 RGB 값의 강도를 조절하는 것이다. RGB 픽셀 값에 주성분 분석을 실시한 뒤 고윳값에 비례하여 주성분의 배수를 이미지에 더했다 ??????????
+두 번째는 이미지의 RGB 값에 변화를 주는 것이다. RGB 픽셀값에 주성분 분석을 실시한 뒤 고윳값\*가우시안 랜덤변수(0, 0.01)을 픽셀값에 더해주었다. 
 
 ### 4.2 Dropout
 여러 다른 모델의 예측을 결합하는 것은 test error를 줄이는 좋은 방법이지만 한번 학습하는데 며칠씩 걸리는 매우 큰 모델에는 적용하기 어렵다. 하지만 효율적으로 그러한 효과를 내는 방법이 바로 "dropout"이다. hidden layer의 각 뉴런은 0.5의 확률로 "drop out" 되며 제거된 뉴런은 예측에 참여하지 않는다. 따라서 매 입력마다 모델은 서로 다른 구조를 가지며 뉴런들은 더 robust한 특징들을 학습하게 된다.
@@ -104,4 +104,10 @@ overfitting을 줄이는 가장 간단한 방법은 label-preserving transformat
 * bias 초기화
  * 2, 4, 5 번째 convolutional layer, fully-connected layer : 1
  * 1, 3 번째 convolutional layer : 0
+* learning rate : 0.01
+ * validation error의 개선이 없으면 10으로 나누어 업데이트
+ * 전체 학습 동안 3번 업데이트
+* epoch : 90
 
+## 6. Results
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/155488578-ef417e65-158b-49a7-a90a-f90bba37bd81.png" width="85%"></p>
