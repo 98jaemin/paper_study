@@ -42,9 +42,9 @@ ImageNet은 다양한 사이즈의 이미지로 이루어져있다. 그러나 Al
 
 
 ### 3.3 Local Response Normalization
-본 논문에서 아래와 같은 local normalization을 사용한다. 
-<p align='center'><img src="https://user-images.githubusercontent.com/86872735/155103756-a8f65efb-e7f9-4669-97fe-049f7e1c5765.png" width="40%"></p>
-a는 (x,y) 좌표의 값에 커널 i를 적용한 값이고 k, n, alpha, beta는 하이퍼파라미터로 본 논문에서는 k=2, n=5, alpha=1e-4, beta=0.75로 설정하였다.
+일반적으로 ReLU는 전통적인 activation 함수와 달리 saturating 되지 않으므로 굳이 normalization을 추가하지 않아도 된다. 그러나 본 연구에서는 다음과 같은 normalization을 사용했을 때 일반화 성능이 향상되는 것을 확인했다. 
+<p align='center'><img src='https://user-images.githubusercontent.com/86872735/155460331-afb7e938-c5c3-481b-8e5b-d215b62a35c6.png' width='50%'></p>
+
 
 
 ### 3.4 Overlapping Pooling
