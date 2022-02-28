@@ -34,6 +34,8 @@ Inception architecture는 sparse한 구조를 근사화하는 정교한 network 
 
 ## 4. Architectural Details
 본 논문에서는 우리가 해야할 일은 최적의 local construction을 찾고 이를 공간적으로 반복하는 것이라고 말한다. 
-Arora[2]는 마지막 layer의 상관관계를 분석하고 높은 상관성을 띄는 유닛들끼리 묶는 layer-by-layer 구조를 제안한다. 이런 cluster들은 이전 layer와 연결되어 다음 layer의 유닛을 형성한다. 이전 층의 유닛들이 input 이미지의 특정 지역에 대응되고 해당 유닛들은 filter bank로 나누어질 것이라고 추정한다. 더 낮은 층의 유닛들은 local region에 집중할 것이다. 따라서 결국 많은 cluster들이 하나의 region에에 집중할 것이고 그것들은 다음 층의 1x1 convolutional layer에 의해 커버될 것이다.
+Arora[2]는 마지막 layer의 상관관계를 분석하고 높은 상관성을 띄는 유닛들끼리 묶는 layer-by-layer 구조를 제안한다. 이런 cluster들은 이전 layer와 연결되어 다음 layer의 유닛을 형성한다. 이전 층의 유닛들이 input 이미지의 특정 지역에 대응되고 해당 유닛들은 filter bank로 나누어질 것이라고 추정한다. 더 낮은 층의 유닛들은 local region에 집중할 것이다. 따라서 결국 많은 cluster들이 하나의 region에에 집중할 것이고 그것들은 다음 층의 1x1 convolutional layer에 의해 커버될 것이다. 이때 patch-alignment issue를 피하기 위해 Inception architecture에서는 1x1, 3x3, 5x5 사이즈의 필터를 사용한다. 제안된 architecture는 다음 단계의 input을 형성하는 하나의 output으로 연결된 output filter banks와 layer들의 조합이다.
 
+이러한 "Inception module"이 겹겹이 쌓여있기 때문에, 그 output은 달라지기 마련이다. high layer에서 high-level feature를 추출한다면 spatial concentration은 감소할 것이다. 이는 3x3, 5x5 convolution이 더 필요함을 의미한다. 그러나 5x5 convolution을 몇 개만 사용해도 계산비용이 매우 높아지는 문제가 있다. 따라서 이러한 구조가 최적의 sparse structure를 커버한다 하더라도 매우 비효율적인 연산을 하게 된다.
 
+따라서 계산량 감소를 위해 차원을 줄이는 방법을 사용한다. 
