@@ -38,4 +38,6 @@ Arora[2]는 마지막 layer의 상관관계를 분석하고 높은 상관성을 
 
 이러한 "Inception module"이 겹겹이 쌓여있기 때문에, 그 output은 달라지기 마련이다. high layer에서 high-level feature를 추출한다면 spatial concentration은 감소할 것이다. 이는 3x3, 5x5 convolution이 더 필요함을 의미한다. 그러나 5x5 convolution을 몇 개만 사용해도 계산비용이 매우 높아지는 문제가 있다. 따라서 이러한 구조가 최적의 sparse structure를 커버한다 하더라도 매우 비효율적인 연산을 하게 된다.
 
-따라서 계산량 감소를 위해 차원을 줄이는 방법을 사용한다. 
+따라서 계산량 감소를 위해 차원을 줄이는 방법을 사용한다. 표현은 대부분의 위치에서 sparse해야 하고 전체적으로 집계되어야 할 때에만 신호를 압축해야 한다.  즉, 3x3 convolution과 5x5 convolution 이전에 1x1 convolution이 사용된다.
+
+일반적으로 Inception network는 
