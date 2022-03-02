@@ -69,3 +69,19 @@ auxiliary classifier의 network 구조는 다음과 같다:
 
 ## 6. Training Methodolohy
 학습에는 momentum 0.9인 비동기적 SGD를 사용하였고 learning rate은 8 epoch마다 4%씩 감소시켰다. 또한 추론 시의 마지막 모델 생성을 위해 Polyak averaging을 사용했다. 
+
+지난 몇 달간, 이미지 샘플링 방법은 크게 달라졌다. 따라서 본 network를 학습시키는 확정적인 가이드를 제공하기는 어렵다. 설상가상으로, 몇몇 모델은 상대적으로 작은 crop을, 몇몇은 큰 crop을 이용해 학습했다. 그러나 아주 잘 동작하는 것으로 확인된 한 방법은 8%에서 100%까지 분포된 다양한 사이즈의 patch를 샘플링하는 것이다. 또한 연구진은 광학적 왜곡이 overfitting 예방에 유용하다는 것을 알아냈다.
+
+<p align='center'><img src='https://user-images.githubusercontent.com/86872735/156366401-86a90567-f058-479e-aa58-3e7587d05713.png'></p>
+</br>
+
+## 7. ILSVRC 2014 Classification Challenge Setup and Results
+연구진은 총 7가지 버전의 GoogLeNet 모델을 학습시킨 뒤 이를 앙상블하여 예측에 활용하였다. 모델들은 동일한 초기화 방법과 learning rate을 사용하였으며 샘플링 방법과 input 이미지 순서만 달리했다. 
+
+test 단계에서 적극적인 cropping이 사용되었다. 먼저 이미지의 짧은 변이 256, 288, 320, 352 중 하나가 되도록 resize를 한 후 왼쪽, 가운데, 오른쪽 중 하나를 고른 뒤, 다시 네 코너와 가운데 중 하나를 224x224 크기로 resize하였다(+ 좌우 반전). 충분한 수의 crop이 존재한다면 더 많은 crop의 이득은 미미하기 때문에 이러한 적극적인 cropping은 현실의 문제에서는 반드시 필요하지는 않다.
+
+최종 예측을 얻기 위해 각 classifier와 crop의 softmax 함수값을 평균내었다. 
+</br>
+</br>
+
+## 8. ILSVRC 2014 Detection Challenge Setup and Results
