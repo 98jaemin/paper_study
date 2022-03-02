@@ -66,3 +66,6 @@ auxiliary classifier의 network 구조는 다음과 같다:
   - ReLU
 - dropout : 0.7
 - softmax : training에서만 사용
+
+## 6. Training Methodolohy
+학습에는 momentum 0.9인 비동기적 SGD를 사용하였고 learning rate은 8 epoch마다 4%씩 감소시켰다. 또한 추론 시의 마지막 모델 생성을 위해 Polyak averaging을 사용했다. 
