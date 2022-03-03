@@ -84,4 +84,9 @@ test 단계에서 적극적인 cropping이 사용되었다. 먼저 이미지의 
 </br>
 </br>
 
-## 8. ILSVRC 2014 Detection Challenge Setup and Results
+## 9. Conclusions
+본 연구는 쉽게 사용 가능한 dense building block으로 sparse structure를 근사화하는 것이 컴퓨터비전의 신경망을 개선하는 실행 가능한 방법이라는 것의 확고한 증거를 제시한다. 해당 방법의 가장 큰 장점은 더 얕고 좁은 architecture에 비해 약간의 계산량을 더함에도 상당한 성능 개선을 얻는다는 점이다. 
+
+본 연구의 object detection은 context를 사용하거나 bounding box regression을 수행하지 않았음에도 불구하고 경쟁력이 있었으며, 이는 Inception architecure의 성능에 대한 증거를 보여주었다.
+
+classification과 detection 모두에서, 비슷한 깊이와 너비의 훨씬 더 계산비용이 높은 non-Inception network도 비슷한 결과를 얻을 것으로 예상된다. 그러나 본 연구는 일반적으로 더 sparse한 architecture를 이용하는 것이 실현 가능하고 유용한 아이디어라는 명백한 증거를 제시한다. 
