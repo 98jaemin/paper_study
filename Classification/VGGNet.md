@@ -29,5 +29,20 @@ Table 2에는 각각의 parameter 수를 나타내었다. 높은 depth에도 불
 
 1x1 convolutional layer의 사용으로 receptive field에 영향을 주지 않고 decision function의 비선형성을 증가시킬 수 있다. 
 
+## 3. Classification Framework
+### 3.1 Training
+학습은 mini-batch gradient descent을 이용해 multinomial logistic regression 목적함수를 최적화하는 방식으로 이루어졌다. 배치 사이즈는 256, momentum은 0.9로 설정하였다. weight decay(5·0.0001), 그리고 첫 번째와 두 번째 fully connected layer에 dropout(p=0.5)를 추가하여 regularization 하였다. learning rate은 초기에 0.01로 설정하고 validation accuracy가 개선되지 않으면 1/10로 줄여나갔다. 총 3번의 learning rate 감소가 일어났으며 전체 74 epoch동안 학습을 진행하였다. Krizhevsky(2012)에 비해 더 깊은 네트워크와 많은 parameter에도 불구하고 더 빨리 수렴한 데에는 다음의 두 이유 때문인 것으로 추측된다.
+  - 더 큰 depth와 더 작은 필터 사이즈에 의한 명백한 regularization
+  - 특정 layer의 pre-initialization
+
+깊으 architecture를 학습시킬 때, 앞 4개의 convolutional layer와 마지막 3개의 fully connected layer의 weight를 초기화하였다. pre-initialized 된 layer에 대해서는 learning rate를 감소시키지 않았다. 그 외의 random initialization은 평균이 0, 분산이 0.01인 정규분포로부터 이루어졌다. bias는 0으로 초기화하였다. 
+
+224x224 사이즈의 입력 이미지를 얻기 위해 random crop을 수행하였다. augmentation으로 random horizontal flip과 random RGB color shift도 이루어졌다.
+
+**Training Image Size** ??
+
+### 3.2 Testing
+
+
 
 
