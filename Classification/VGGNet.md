@@ -53,4 +53,15 @@ Multi-GPU 학습은 data parallelism을 이용하고, 각 학습 이미지 배�
 
 ## 4. Classification Experiments
 ### 4.1 Single Scale Evaluation
+test 이미지 사이즈는 다음과 같다: 고정된 S에 대해서는 Q = S, S_min < S < S_max 인 S에 대해서는 Q = 0.5(S_min + S_max). 결과는 Table 3에 나타내었다. 
+
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/158407223-83b5026a-748e-40a9-b9c1-c99d05b93adc.png"></p>
+
+우선, 모델 A에 local response normalization을 추가하는 것(A-LRN)이 성능을 향상시키지 않는다는 것을 알았다. 따라서 더 깊은 모델인 B~E에는 local response normalization을 추가하지 않았다.
+
+다음으로, 모델의 깊이를 늘릴수록 분류 오차가 감소함을 관찰했다. 특히, 동일한 깊이에도 불구하고, 3개의 1x1 conv. layer를 갖는 C가 네트워크 전체에서 1x1 conv. layer를 사용하는 D보다 성능이 안 좋았다. 이는 추가적인 non-linearity가 도움이 되긴 하지만, non-trivial receptive field에 conv. filter를 사용하여 공간적 context를 포착하는 것이 더 중요함을 의미한다. architecture의 오차율은 깊이가 19 layer에 달하면 포화하지만, 더 큰 데이터셋에 대해서는 더 깊은 모델이 효과적일 것이다. 또한 네트워크 B와, B의 3x3 conv. layer쌍을 하나의 5x5 conv. layer로 바꾼 네트워크를 비교해본 결과, B의 top-1 error rate이 7% 낮았다.
+
+마지막으로, 테스트에서 single scale이 사용되었음에도 불구하고, 학습에서 S in [256, 512]의 scale jittering이 S = 256 또는 384의 고정된 경우보다 훨씬 좋은 성능을 내었다. 이는 scale jittering을 통한 augmentation이 multi-scale 이미지 통계를 포착하는데 도움을 준다는 것을 의미한다. 
+
+### 4.2 Multi-Scale Evaluation
 
