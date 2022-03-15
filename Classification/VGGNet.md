@@ -42,7 +42,15 @@ Table 2에는 각각의 parameter 수를 나타내었다. 높은 depth에도 불
 **Training Image Size** ??
 
 ### 3.2 Testing
+??
+</br>
 
+### 3.3 Implementation Details
+Multi-GPU 학습은 data parallelism을 이용하고, 각 학습 이미지 배치를 몇 개의 GPU에 나누어 각각 병렬적으로 처리한다. GPU 배치 gradient를 계산한 후, 평균 내어 전체 배치의 gradient를 계산한다. gradient 계산은 여러 GPU에서 동기적으로 일어나므로, 그 결과는 하나의 GPU에서 계산되었을 때와 동일하다. 
 
+학습 속도를 높이는 다른 방법들도 제안되었지만, 본 연구진이 제안한 4-GPU 시스템은 하나의 GPU를 사용했을 때보다 3.75배 빠른 성능을 보여주었다. 4개의 NVIDIA Titan Black GPU를 사용했을 때, 하나의 네트워크 학습에 2~3주 소모하였다. 
+</br>
 
+## 4. Classification Experiments
+### 4.1 Single Scale Evaluation
 
