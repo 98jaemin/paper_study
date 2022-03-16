@@ -6,6 +6,7 @@
 CNN이 컴퓨터비전 분야에서 점점 더 사용되면서, 기존의 구조를 개선하여 성능을 높이려는 많은 노력들이 이루어졌다. 본 논문에서는 그 중 모델의 depth 문제를 다룬다. architecture의 다른 parameter는 고정하고, convolutional layer를 추가하여 network의 깊이만 조금씩 늘려간다. 이는 모든 layer에서 3x3 크기의 매우 작은 filter를 사용하기 때문에 가능하다.
 
 결과적으로, ILSVRC에서 가장 좋은 성능을 냈을 뿐만 아니라 다른 dataset에도 적용 가능한 매우 정확한 CNN architecture를 얻을 수 있었다. 
+</br>
 
 ## 2. ConvNet Configurations
 ### 2.1 Architecture
@@ -28,6 +29,7 @@ Table 2에는 각각의 parameter 수를 나타내었다. 높은 depth에도 불
 본 연구의 network는 기존의 상위권 network와 사뭇 다르다. 첫 번째 layer에서 상대적으로 큰(e.g. 11x11 with stride 4, 7x7 with stride 2) receptive field를 사용하는 대신, 전체 network에서 stride 1의 3x3 사이즈를 사용한다. 3x3 convolutional layer 2개를 쌓는 것은 5x5 의 효과를 내고 3개를 쌓으면 7x7의 효과를 낸다. 이로써 decision function을 더욱 discriminative하게 만들고 parameter의 수를 줄일 수 있다.
 
 1x1 convolutional layer의 사용으로 receptive field에 영향을 주지 않고 decision function의 비선형성을 증가시킬 수 있다. 
+</br>
 
 ## 3. Classification Framework
 ### 3.1 Training
@@ -39,10 +41,17 @@ Table 2에는 각각의 parameter 수를 나타내었다. 높은 depth에도 불
 
 224x224 사이즈의 입력 이미지를 얻기 위해 random crop을 수행하였다. augmentation으로 random horizontal flip과 random RGB color shift도 이루어졌다.
 
-**Training Image Size** ??
+**Training Image Size.** 학습 이미지의 짧은 쪽 변의 길이를 S라고 하자.(여기서 S를 training scale 이라고 부른다) 모델의 입력으로는 원본 이미지를 224x224로 자른 이미지가 사용된다.
+
+training scale S를 정하는 두 가지 방법을 고려한다. 첫 번째는 single-scale training으로, 고정된 값을 사용하는 것이다. 연구에서는 256과 384, 두 가지 값을 사용하였다. 먼저 S=256으로 네트워크를 학습시킨다. 그리고 S=384로 다시 학습시키는데 이때 S=256에서 학습된 weight로 초기화하여 속도를 높인다.
+
+두 번째 방법은 multi-scale training으로, 각 학습 이미지에 대해 [S_min, S_max]에서 랜덤하게 선택된 S 값을 사용한다(논문에서는 S_min=256, S_max=512 사용). 학습 데이터셋에 대해 다양한 스케일을 이용하므로 augmentation으로 볼 수도 있다. 학습 속도 때문에, multi-scale 모델들은 S=384인 single-scale 사전학습 모델을 fine tuning하여 학습을 진행했다.
+
 
 ### 3.2 Testing
-??
+먼저 테스트 이미지의 짧은 변의 길이인 Q (test scale)로 rescale한다. 그리고 fully-convolutional net을 적용하여 그 결과로 class scoring map을 얻는다. 이를 공간적으로 평균 내어 (sum-pooled) 고정된 사이즈의 벡터를 얻는다. 또한 테스트 이미지를 horizontal flipping 하고 원본과 flipped 이미지의 결과를 평균내어 최종 결과로 사용한다.
+
+
 </br>
 
 ### 3.3 Implementation Details
