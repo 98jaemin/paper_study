@@ -7,6 +7,7 @@ CNN이 컴퓨터비전 분야에서 점점 더 사용되면서, 기존의 구조
 
 결과적으로, ILSVRC에서 가장 좋은 성능을 냈을 뿐만 아니라 다른 dataset에도 적용 가능한 매우 정확한 CNN architecture를 얻을 수 있었다. 
 </br>
+</br>
 
 ## 2. ConvNet Configurations
 ### 2.1 Architecture
@@ -29,6 +30,7 @@ Table 2에는 각각의 parameter 수를 나타내었다. 높은 depth에도 불
 본 연구의 network는 기존의 상위권 network와 사뭇 다르다. 기존에는 첫 번째 layer에서 상대적으로 큰(e.g. 11x11 with stride 4, 7x7 with stride 2)필터를 사용했지만, VGG network에서는 stride 1의 3x3 사이즈를 사용한다. 3x3 convolutional layer 2개를 쌓는 것은 5x5 의 효과를 내고 3개를 쌓으면 7x7의 효과를 낸다. 이로써 decision function을 더욱 discriminative하게 만들고 parameter의 수를 줄일 수 있다.
 
 1x1 convolutional layer의 사용으로 receptive field에 영향을 주지 않고 decision function의 비선형성을 증가시킬 수 있다. 
+</br>
 </br>
 
 ## 3. Classification Framework
@@ -56,6 +58,7 @@ training scale S를 정하는 두 가지 방법을 고려한다. 첫 번째는 s
 Multi-GPU 학습은 data parallelism을 이용하고, 각 학습 이미지 배치를 몇 개의 GPU에 나누어 각각 병렬적으로 처리한다. GPU 배치 gradient를 계산한 후, 평균 내어 전체 배치의 gradient를 계산한다. gradient 계산은 여러 GPU에서 동기적으로 일어나므로, 그 결과는 하나의 GPU에서 계산되었을 때와 동일하다. 
 
 학습 속도를 높이는 다른 방법들도 제안되었지만, 본 연구진이 제안한 4-GPU 시스템은 하나의 GPU를 사용했을 때보다 3.75배 빠른 성능을 보여주었다. 4개의 NVIDIA Titan Black GPU를 사용했을 때, 하나의 네트워크 학습에 2~3주 소모하였다. 
+</br>
 </br>
 
 ## 4. Classification Experiments
@@ -94,6 +97,8 @@ Table 7에 SOTA와의 비교 결과를 나타내었다. ILSVRC 2014에서는 7�
 
 표에서 볼 수 있듯이 연구진의 모델은 기존의 모델들과 동등하거나 그 이상의 성능을 보여준다. 이는 상당히 주목할 만한데 해당 결과는 단 2개의 모델만을 결합하여 낸 결과이기 때문이다(대부분의 경우 훨씬 많은 모델을 결합). 
 <p align="center"><img src="https://user-images.githubusercontent.com/86872735/158737746-6fc7b3ef-3032-49e1-b4cc-498e4261a226.png"></p>
+</br>
+</br>
 
 ## 5. Conclusion
 본 연구에서는 large-scale 이미지 분류를 위한 매우 깊은 (최대 19 layer) convolutional network를 평가했다. 그 결과 깊은 모델이 충분히 효과적이고 다른 SOTA 모델과 대등함을 보여주었다. Appendix에서는 본 모델이 다른 task와 dataset에서도 일반화가 가능함을 보여준다. 
