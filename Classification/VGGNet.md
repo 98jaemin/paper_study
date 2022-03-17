@@ -12,12 +12,12 @@ CNN이 컴퓨터비전 분야에서 점점 더 사용되면서, 기존의 구조
 ### 2.1 Architecture
 학습에는 224x224 사이즈의 RGB 이미지를 사용한다. 각 픽셀의 RGB 평균값을 빼는 것이 유일한 전처리 작업이다. convolutional layer에서 3x3의 작은 사이즈의 필터를 사용한다. input channel의 선형 변환을 위한 1x1 필터도 사용한다. convolution의 stride는 1로 고정하고 padding은 1로 설정한다. 몇몇 convolutional layer 뒤에는 filter size 2, stride 2인 max pooling layer를 추가한다.
 
-convolution block에 이어 3개의 fully connected layer가 존재한다. 첫 번째, 두 번째는 각각 4096 채널이고 세 번째는 1000개의 채널을 갖는다. 마지막 layer는 softmax이다. 
+convolution block 다음에는 3개의 fully connected layer가 존재한다. 첫 번째, 두 번째는 각각 4096 채널이고 세 번째는 1000개의 채널을 갖는다. 마지막 layer는 softmax이다. 
 
 모든 hidden layer는 ReLU를 사용한다. 하나의 네트워크를 제외하고는 Local Response Normalization을 사용하지 않는다.
 
 ### 2.2 Configurations
-각 network의 구성은 Table 1과 같다. 모두 구성은 동일하되 depth만 다르다. convolutional layer의 너비는 64에서 시작하여 max pooling layer 이후에 2의 거듭제곱으로 증가하여 512까지 늘어난다.
+각 network의 구성은 Table 1과 같다. 모두 구성은 동일하되 depth만 다르다. convolutional layer의 너비는 64에서 시작하여 max pooling layer 이후에 2배씩 증가하여 512까지 늘어난다.
 <p align="center"><img src="https://user-images.githubusercontent.com/86872735/158050994-883e375b-7fb8-4d46-9b35-b1a8895bae69.png"></p>
 </br>
 
@@ -26,14 +26,14 @@ Table 2에는 각각의 parameter 수를 나타내었다. 높은 depth에도 불
 </br>
 
 ### 2.3 Discussion
-본 연구의 network는 기존의 상위권 network와 사뭇 다르다. 첫 번째 layer에서 상대적으로 큰(e.g. 11x11 with stride 4, 7x7 with stride 2) receptive field를 사용하는 대신, 전체 network에서 stride 1의 3x3 사이즈를 사용한다. 3x3 convolutional layer 2개를 쌓는 것은 5x5 의 효과를 내고 3개를 쌓으면 7x7의 효과를 낸다. 이로써 decision function을 더욱 discriminative하게 만들고 parameter의 수를 줄일 수 있다.
+본 연구의 network는 기존의 상위권 network와 사뭇 다르다. 기존에는 첫 번째 layer에서 상대적으로 큰(e.g. 11x11 with stride 4, 7x7 with stride 2)필터를 사용했지만, VGG network에서는 stride 1의 3x3 사이즈를 사용한다. 3x3 convolutional layer 2개를 쌓는 것은 5x5 의 효과를 내고 3개를 쌓으면 7x7의 효과를 낸다. 이로써 decision function을 더욱 discriminative하게 만들고 parameter의 수를 줄일 수 있다.
 
 1x1 convolutional layer의 사용으로 receptive field에 영향을 주지 않고 decision function의 비선형성을 증가시킬 수 있다. 
 </br>
 
 ## 3. Classification Framework
 ### 3.1 Training
-학습은 mini-batch gradient descent을 이용해 multinomial logistic regression 목적함수를 최적화하는 방식으로 이루어졌다. 배치 사이즈는 256, momentum은 0.9로 설정하였다. weight decay(5·0.0001), 그리고 첫 번째와 두 번째 fully connected layer에 dropout(p=0.5)를 추가하여 regularization 하였다. learning rate은 초기에 0.01로 설정하고 validation accuracy가 개선되지 않으면 1/10로 줄여나갔다. 총 3번의 learning rate 감소가 일어났으며 전체 74 epoch동안 학습을 진행하였다. Krizhevsky(2012)에 비해 더 깊은 네트워크와 많은 parameter에도 불구하고 더 빨리 수렴한 데에는 다음의 두 이유 때문인 것으로 추측된다.
+학습은 mini-batch gradient descent을 이용해 multinomial logistic regression 목적함수를 최적화하는 방식으로 이루어졌다. 배치 사이즈는 256, momentum은 0.9로 설정하였다. weight decay(0.0005), 그리고 첫 번째와 두 번째 fully connected layer에 dropout(p=0.5)를 추가하여 regularization 하였다. learning rate은 초기에 0.01로 설정하고 validation accuracy가 개선되지 않으면 1/10로 줄여나갔다. 총 3번의 learning rate 감소가 일어났으며 전체 74 epoch동안 학습을 진행하였다. AlexNet에 비해 더 깊은 네트워크와 많은 parameter에도 불구하고 더 빨리 수렴한 데에는 다음의 두 이유 때문인 것으로 추측된다.
   - 더 큰 depth와 더 작은 필터 사이즈에 의한 명백한 regularization
   - 특정 layer의 pre-initialization
 
@@ -47,12 +47,10 @@ training scale S를 정하는 두 가지 방법을 고려한다. 첫 번째는 s
 
 두 번째 방법은 multi-scale training으로, 각 학습 이미지에 대해 [S_min, S_max]에서 랜덤하게 선택된 S 값을 사용한다(논문에서는 S_min=256, S_max=512 사용). 학습 데이터셋에 대해 다양한 스케일을 이용하므로 augmentation으로 볼 수도 있다. 학습 속도 때문에, multi-scale 모델들은 S=384인 single-scale 사전학습 모델을 fine tuning하여 학습을 진행했다.
 
-
 ### 3.2 Testing
 먼저 테스트 이미지의 짧은 변의 길이인 Q (test scale)로 rescale한다. 그리고 fully-convolutional net을 적용하여 그 결과로 class scoring map을 얻는다. 이를 공간적으로 평균 내어 (sum-pooled) 고정된 사이즈의 벡터를 얻는다. 또한 테스트 이미지를 horizontal flipping 하고 원본과 flipped 이미지의 결과를 평균내어 최종 결과로 사용한다.
 
-
-</br>
+테스트 시에는 모든 이미지에 대해 fully-convolutional network를 적용하므로 여러 crop을 샘플링할 필요가 없다. 동시에, 많은 수의 crop을 사용하는 것은 성능 향상을 이끌 수도 있다. 또한 ㅠㅠ
 
 ### 3.3 Implementation Details
 Multi-GPU 학습은 data parallelism을 이용하고, 각 학습 이미지 배치를 몇 개의 GPU에 나누어 각각 병렬적으로 처리한다. GPU 배치 gradient를 계산한 후, 평균 내어 전체 배치의 gradient를 계산한다. gradient 계산은 여러 GPU에서 동기적으로 일어나므로, 그 결과는 하나의 GPU에서 계산되었을 때와 동일하다. 
@@ -73,4 +71,30 @@ test 이미지 사이즈는 다음과 같다: 고정된 S에 대해서는 Q = S,
 마지막으로, 테스트에서 single scale이 사용되었음에도 불구하고, 학습에서 S in [256, 512]의 scale jittering이 S = 256 또는 384의 고정된 경우보다 훨씬 좋은 성능을 내었다. 이는 scale jittering을 통한 augmentation이 multi-scale 이미지 통계를 포착하는데 도움을 준다는 것을 의미한다. 
 
 ### 4.2 Multi-Scale Evaluation
+scale jittering의 효과를 평가하기 위해 몇 가지 버전의 rescaled 테스트 이미지에 모델을 적용해본다. training과 test scale의 차이가 크면 성능이 떨어지는 것을 고려하여, 고정된 S 값으로 학습된 모델은 3가지의 test scale로 평가하였다: Q = {S-32, S, S+32}. 학습에서 scale jittering을 사용한 network는 더 넓은 범위에 적용될 수 있으므로 S in [S_min, S_max]로 학습됐던 모델은 Q = {S_min, 0.5(S_min + S_max), S_max}로 평가하였다.
+
+Table 4의 결과를 보면, test 시의 scale jittering은 성능을 향상시켰다. 앞서와 마찬가지로 가장 깊은 구성인 D와 E가 좋은 성능을 보였다.
+
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/158732359-04fca56c-2146-41bd-b8c8-c6f06c2ff003.png"></p>
+
+### 4.3 Multi-Crop Evaluation
+Table 5에서는 dense evaluation과 multi-crop evaluation을 비교하였다. 또한 둘의 softmax 출력을 평균내어 두 테크닉의 상호보완성도 평가하였다. multiple crop이 dense에 비해 좀 더 좋은 성능을 보였으며 함께 사용했을 때 가장 좋았다. 
+
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/158732760-db78b404-9d63-4b51-a42e-9fa97bb77bc3.png"></p>
+
+### 4.4 ConvNet Fusion
+연구에서는 여러 모델의 softmax 출력을 평균내어 결합한 모델도 평가하였다. 이것은 모델들의 상호보완성 덕분에 성능을 향상시키며 2012년과 2013년 ILSVRC의 top submissions에서도 사용되었다.
+
+결과는 Table 6에 나타내었다. 단독으로 가장 좋은 multi-scale 모델들인 D와 E를 결합하는 것이 가장 좋은 성능을 보여주었다. 
+
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/158737000-2dbc94a4-c3bb-4dc8-94d6-a33cfb14da8d.png"></p>
+
+### 4.5 Comparison with the State of the Art
+Table 7에 SOTA와의 비교 결과를 나타내었다. ILSVRC 2014에서는 7개의 모델을 앙상블하여 2등(7.3 %)을 기록했으나 제출 후 2개의 모델을 앙상블하여 더 좋은 성능(6.8 %)을 내었다. 
+
+표에서 볼 수 있듯이 연구진의 모델은 기존의 모델들과 동등하거나 그 이상의 성능을 보여준다. 이는 상당히 주목할 만한데 해당 결과는 단 2개의 모델만을 결합하여 낸 결과이기 때문이다(대부분의 경우 훨씬 많은 모델을 결합). 
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/158737746-6fc7b3ef-3032-49e1-b4cc-498e4261a226.png"></p>
+
+## 5. Conclusion
+본 연구에서는 large-scale 이미지 분류를 위한 매우 깊은 (최대 19 layer) convolutional network를 평가했다. 그 결과 깊은 모델이 충분히 효과적이고 다른 SOTA 모델과 대등함을 보여주었다. Appendix에서는 본 모델이 다른 task와 dataset에서도 일반화가 가능함을 보여준다. 
 
