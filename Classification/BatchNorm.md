@@ -23,6 +23,14 @@ gradient descent 단계에서 연산을 할 때, 이는 신경망 F_2에 입력 
 
 입력의 고정된 분포는 sub-network 바깥에도 그 이점이 있다. sigmoid 활성화 함수를 생각해보자. 0 근처가 아닌 모든 x에 대해 기울기 소실 문제가 발생하고 학습이 느리게 이루어진다. 이러한 포화 문제를 해결하기 위해 일반적으로 초기화를 조정하거나 ReLU, 또는 더 작은 learning rate을 사용한다. 하지만 비선형적 입력의 분포가 학습 시 더 안정적으로 유지된다면 optimizer는 기울기 포화에 빠질 가능성이 줄어들고 학습은 가속될 것이다.
 
-연구진은 학습 과정에서 심층신경망의 내부 노드의 분포가 변하는 것을 ***Internal Covariate Shift***라고 명명하였다. 이것을 제거하는 것은 학습이 빨라지도록 한다. 연구진은 internal covariate shift를 제거하고 학습 속도를 급격히 빠르게 만드는 ***Batch Normalization***이라는 새로운 메커니즘을 제안한다. 이것은 normalization 단계를 통해 layer 입력의 평균과 표준편차를 고정함으로써 이루어진다. Batch Normalization은 또한 network 전체의 gradient 흐름에도 이점이 있는데, parameter의 scale이나 초깃값에 대한 gradient의 의존도를 감소시킨다. 이로 인해 발산의 위험성 없이 더 큰 learning rate을 사용할 수 있게 된다. 
+연구진은 학습 과정에서 심층신경망의 내부 노드의 분포가 변하는 것을 ***Internal Covariate Shift***라고 정의하였다. 이것을 제거하는 것은 학습이 빨라지도록 한다. 연구진은 internal covariate shift를 제거하고 학습 속도를 급격히 빠르게 만드는 ***Batch Normalization***이라는 새로운 메커니즘을 제안한다. 이것은 normalization 단계를 통해 layer 입력의 평균과 표준편차를 고정함으로써 이루어진다. Batch Normalization은 network 전체의 gradient 흐름에도 이점이 있는데, parameter의 scale이나 초깃값에 대한 gradient의 의존도를 감소시킨다. 이로 인해 발산의 위험성 없이 더 큰 learning rate을 사용할 수 있게 된다. 게다가 Batch Normalization은 모델을 규제하여 Dropout의 필요성을 감소시킨다. 마지막으로 기울기의 포화도 예방한다.
+
+§4.2에서 현재 가장 뛰어난 ImageNet 분류 network에 Batch Normalization을 적용하였고 그 결과 단 7%의 학습 단계만에 동등한 성능을 낼 수 있었다. Batch Normalization을 사용한 network를 앙상블하여 알려진 최고 수준의 top-5 error rate을 달성하였다.
+</br>
+
+## 2. Towards Reducing Internal Covariate Shift
+입력이 whitened(평균 0, 분산이 1을 갖고 상관성이 없도록 선형 변환하는 것을 whitening 이라고 표현) 되었을 때 network의 학습이 빨라진다는 것은 오래전부터 알려져 있었다. 각 layer의 입력을 whitening함으로써 분포를 고정하고 internal covariate shift의 나쁜 효과를 제거하는데에 한 발 다가가고자 한다.
+
+연구진은 매 학습 단계 또는 특정한 간격으로 network를 직접 수정하거나 parameter를 변경함으로써 whitening activation을 고려하였다. 그러나 이러한 수정들이 optimization 단계에 배치된다면, gradient descent 단계에서 parameter는 normalization의 업데이트를 요구하는 방향으로 개선될 것이고, 이는 gradient 단계의 효과를 감소시킨다. ???
 
 
