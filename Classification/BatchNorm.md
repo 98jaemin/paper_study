@@ -23,6 +23,6 @@ gradient descent 단계에서 연산을 할 때, 이는 신경망 F_2에 입력 
 
 입력의 고정된 분포는 sub-network 바깥에도 그 이점이 있다. sigmoid 활성화 함수를 생각해보자. 0 근처가 아닌 모든 x에 대해 기울기 소실 문제가 발생하고 학습이 느리게 이루어진다. 이러한 포화 문제를 해결하기 위해 일반적으로 초기화를 조정하거나 ReLU, 또는 더 작은 learning rate을 사용한다. 하지만 비선형적 입력의 분포가 학습 시 더 안정적으로 유지된다면 optimizer는 기울기 포화에 빠질 가능성이 줄어들고 학습은 가속될 것이다.
 
-연구진은 학습 과정에서 심층신경망의 내부 노드의 분포가 변하는 것을 ***Internal Covariate Shift***라고 명명하였다. 이것을 제거하는 것은 학습이 빨라지도록 한다. 연구진은 internal covariate shift를 제거하고 학습 속도를 급격히 빠르게 만드는 ***Batch Normalization***이라는 새로운 메커니즘을 제안한다. 이것은 normalization 단계를 통해 layer 입력의 평균과 표준편차를 고정함으로써 이루어진다.  
+연구진은 학습 과정에서 심층신경망의 내부 노드의 분포가 변하는 것을 ***Internal Covariate Shift***라고 명명하였다. 이것을 제거하는 것은 학습이 빨라지도록 한다. 연구진은 internal covariate shift를 제거하고 학습 속도를 급격히 빠르게 만드는 ***Batch Normalization***이라는 새로운 메커니즘을 제안한다. 이것은 normalization 단계를 통해 layer 입력의 평균과 표준편차를 고정함으로써 이루어진다. Batch Normalization은 또한 network 전체의 gradient 흐름에도 이점이 있는데, parameter의 scale이나 초깃값에 대한 gradient의 의존도를 감소시킨다. 이로 인해 발산의 위험성 없이 더 큰 learning rate을 사용할 수 있게 된다. 
 
 
