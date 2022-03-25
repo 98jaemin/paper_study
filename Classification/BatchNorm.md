@@ -31,6 +31,14 @@ gradient descent 단계에서 연산을 할 때, 이는 신경망 F_2에 입력 
 ## 2. Towards Reducing Internal Covariate Shift
 입력이 whitened(평균 0, 분산이 1을 갖고 상관성이 없도록 선형 변환하는 것을 whitening 이라고 표현) 되었을 때 network의 학습이 빨라진다는 것은 오래전부터 알려져 있었다. 각 layer의 입력을 whitening함으로써 분포를 고정하고 internal covariate shift의 나쁜 효과를 제거하는데에 한 발 다가가고자 한다.
 
-연구진은 매 학습 단계 또는 특정한 간격으로 network를 직접 수정하거나 parameter를 변경함으로써 whitening activation을 고려하였다. 그러나 이러한 수정들이 optimization 단계에 배치된다면, gradient descent 단계에서 parameter는 normalization의 업데이트를 요구하는 방향으로 개선될 것이고, 이는 gradient 단계의 효과를 감소시킨다. ???
+연구진은 매 학습 단계 또는 특정한 간격으로 network를 직접 수정하거나 parameter를 변경함으로써 whitening activation을 고려하였다. 그러나 이러한 수정들이 optimization 단계에 배치된다면, gradient descent 단계에서 parameter는 normalization의 업데이트를 요구하는 방향으로 개선될 것이고, 이는 gradient 단계의 효과를 감소시킨다.
+
+위의 접근법의 문제는 gradient descent optimization이 normalization이 일어난다는 점을 고려하지 않는다는 것이다. 이 문제를 해결하기 위해, 임의의 parameter 값에 대해 network가 항상 이상적인 활성화를 출력하도록 보장하고자 한다. 그렇게 함으로써 loss의 gradient가 normalization과 모델 parameter의 의존성을 설명할 수 있게 된다. 
+
+x를 layer 입력 벡터, X를 학습데이터셋의 x의 집합이라고 할 때 normalization은 Norm(x, X)로 쓸 수 있다. 즉 입력 x 뿐만 아니라 parameter에 의존하는 모든 X에 의존하게 된다. 이와 같은 framework에서 layer 입력을 whitening 하는 것은 많은 계산량을 요구한다. 따라서 연구진은 미분이 가능하며, 매 parameter 업데이트마다 전체 학습 데이터셋의 분석을 필요로 하지 않는 새로운 normalization 방법을 탐색하였다. 
+
+
+
+
 
 
