@@ -37,6 +37,9 @@ gradient descent 단계에서 연산을 할 때, 이는 신경망 F_2에 입력 
 
 x를 layer 입력 벡터, X를 학습데이터셋의 x의 집합이라고 할 때 normalization은 Norm(x, X)로 쓸 수 있다. 즉 입력 x 뿐만 아니라 parameter에 의존하는 모든 X에 의존하게 된다. 이와 같은 framework에서 layer 입력을 whitening 하는 것은 많은 계산량을 요구한다. 따라서 연구진은 미분이 가능하며, 매 parameter 업데이트마다 전체 학습 데이터셋의 분석을 필요로 하지 않는 새로운 normalization 방법을 탐색하였다. 
 
+기존의 몇몇 접근법들은 하나의 학습 샘플만을 이용하거나, 이미지의 경우 동일한 위치의 여러 샘플을 이용하였다. 하지만 이러한 방법은 activation의 절대적 스케일을 버림으로써 표현력을 바꾸게 된다. 연구진은 전체 학습 데이터의 통계와 관련하여 학습 샘플을 normalization함으로써 신경망의 정보들을 보존하고자 한다.
+
+## 3 . Normalization via Mini-Batch Statistics
 
 
 
