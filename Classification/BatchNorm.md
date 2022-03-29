@@ -8,18 +8,18 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/86872735/159493642-794bb5cc-39e9-42b8-9234-7c076a42425c.png" width="15%"></p>
 
 한번에 하나의 데이터를 사용하는 것과 비교하여 mini-batch를 사용하는 것은 몇 가지 이점이 있다.
-- mini-batch loss의 gradient는 전체 학습 데이터의 gradient의 추정값이며 이는 batch size가 커질수록 개선된다
+- mini-batch loss의 gradient는 전체 training set의 gradient의 추정값이며 이는 batch size가 커질수록 개선된다
 - 각 데이터에 대해 m번 연산하는 것보다 batch를 통해 연산하는 것이 훨씬 효율적이다. (parallelism)
 
-각 layer의 입력은 모든 이전 layer의 parameter에 영향을 받게 되며, 따라서 신경망이 깊어질수록 작은 변화도 증폭되게 된다.
+각 layer의 입력은 모든 이전 layer의 parameter에 영향을 받게 되며, 따라서 network가 깊어질수록 작은 변화도 증폭되게 된다.
 
-layer의 입력의 분포의 변화는 layer가 계속해서 새로운 분포에 적응해야 한다는 문제를 야기한다. 신경망이 다음과 같은 연산을 한다고 하자. F_1과 F_2는 임의의 변환이고 Theta_1과 Theta_2는 loss를 최소화하기 위해 학습되는 parameter이다.
+layer의 입력의 분포의 변화는 layer가 계속해서 새로운 분포에 적응해야 한다는 문제를 야기한다. network가 다음과 같은 연산을 한다고 하자. F_1과 F_2는 임의의 변환이고 Theta_1과 Theta_2는 loss를 최소화하기 위해 학습되는 parameter이다.
 <p align="center"><img src="https://user-images.githubusercontent.com/86872735/159498055-8b797b0f-7fb9-4983-be10-ecddcb602b11.png" width="22%"></p>
 
 Theta_2에 대한 학습은 x=F_1(u, Theta_1)일 때 다음과 같다.
 <p align="center"><img src="https://user-images.githubusercontent.com/86872735/159498647-3822f745-41c3-438f-a8be-896bc46b4f76.png" width="15%"></p>
 
-gradient descent 단계에서 연산을 할 때, 이는 신경망 F_2에 입력 x를 받아들이는 것과 동등하다. 입력 분포의 특성은 sub-network에도 적용된다. x의 분포가 고정된다면 Theta_2는 매번 변화에 맞추어 재조정될 필요가 없다.
+gradient descent 단계에서 연산을 할 때, 이는 network F_2에 입력 x를 받아들이는 것과 동등하다. 입력 분포의 특성은 sub-network에도 적용된다. x의 분포가 고정된다면 Theta_2는 매번 변화에 맞추어 재조정될 필요가 없다.
 
 입력의 고정된 분포는 sub-network 바깥에도 그 이점이 있다. sigmoid 활성화 함수를 생각해보자. 0 근처가 아닌 모든 x에 대해 기울기 소실 문제가 발생하고 학습이 느리게 이루어진다. 이러한 포화 문제를 해결하기 위해 일반적으로 초기화를 조정하거나 ReLU, 또는 더 작은 learning rate을 사용한다. 하지만 비선형적 입력의 분포가 학습 시 더 안정적으로 유지된다면 optimizer는 기울기 포화에 빠질 가능성이 줄어들고 학습은 가속될 것이다.
 
@@ -38,7 +38,7 @@ gradient descent 단계에서 연산을 할 때, 이는 신경망 F_2에 입력 
 
 x를 layer 입력 벡터, X를 학습데이터셋의 x의 집합이라고 할 때 normalization은 Norm(x, X)로 쓸 수 있다. 즉 입력 x 뿐만 아니라 parameter에 의존하는 모든 X에 의존하게 된다. 이와 같은 framework에서 layer 입력을 whitening 하는 것은 많은 계산량을 요구한다. 따라서 연구진은 미분이 가능하며, 매 parameter 업데이트마다 전체 학습 데이터셋의 분석을 필요로 하지 않는 새로운 normalization 방법을 탐색하였다. 
 
-기존의 몇몇 접근법들은 하나의 학습 샘플만을 이용하거나, 이미지의 경우 동일한 위치의 여러 샘플을 이용하였다. 하지만 이러한 방법은 activation의 절대적 스케일을 버림으로써 표현력을 바꾸게 된다. 연구진은 전체 학습 데이터의 통계와 관련하여 학습 샘플을 normalization함으로써 신경망의 정보들을 보존하고자 한다.
+기존의 몇몇 접근법들은 하나의 학습 샘플만을 이용하거나, 이미지의 경우 동일한 위치의 여러 샘플을 이용하였다. 하지만 이러한 방법은 activation의 절대적 스케일을 버림으로써 표현력을 바꾸게 된다. 연구진은 전체 학습 데이터의 통계와 관련하여 학습 샘플을 normalization함으로써 network의 정보들을 보존하고자 한다.
 </br>
 </br>
 
@@ -47,10 +47,10 @@ x를 layer 입력 벡터, X를 학습데이터셋의 x의 집합이라고 할 �
 <p align="center"><img src="https://user-images.githubusercontent.com/86872735/160398672-a4ce55d3-9c08-40ed-af99-f01cf2a2b011.png" width="20%"></p>
 <p align="center"><img src="https://user-images.githubusercontent.com/86872735/160398701-36a091a4-d719-4745-b60e-d3f7941d0403.png" width="20%"></p>
 
-단순히 각 layer의 입력을 normalizing하는 것은 해당 layer의 표현력을 변화시킬 수 있다. 이 문제를 해결하기 위해, 신경망에 추가된 변환이 identity transform을 대신할 수 있도록 한다. 그렇게 하기 위해 연구진은 normalize된 값을 scale 및 shift 하는 parameter, gamma와 beta를 도입한다.
+단순히 각 layer의 입력을 normalizing하는 것은 해당 layer의 표현력을 변화시킬 수 있다. 이 문제를 해결하기 위해, network에 추가된 변환이 identity transform을 대신할 수 있도록 한다. 그렇게 하기 위해 연구진은 normalize된 값을 scale 및 shift 하는 parameter, gamma와 beta를 도입한다.
 <p align="center"><img src="https://user-images.githubusercontent.com/86872735/160400594-03256a41-e3dc-4273-a922-81ffbb024005.png" width="20%"></p>
 
-이 parameter들은 원래의 모델 parameter와 함께 학습되며 신경망의 표현력을 저장한다. 사실 gamma^(k) = sqrt(Var[x^(k)]), beta^(k) = E[x^(k)]로 설정하면 기존 activation을 복구할 수 있다.
+이 parameter들은 원래의 모델 parameter와 함께 학습되며 network의 표현력을 저장한다. 사실 gamma^(k) = sqrt(Var[x^(k)]), beta^(k) = E[x^(k)]로 설정하면 기존 activation을 복구할 수 있다.
 
 우리는 mini-batch SGD를 사용하므로, mini-batch가 각 activation의 평균 및 분산의 추정량을 만들어낸다고 하자. 그러면 normalization에 사용한 통계량이 gradient backpropagation에 완전히 참여할 수 있다. mini-batch의 사용은 결합공분산이 아닌 차원별 분산의 계산 덕에 가능함을 주목한다.
 
@@ -58,6 +58,13 @@ x를 layer 입력 벡터, X를 학습데이터셋의 x의 집합이라고 할 �
 <p align="center"><img src="https://user-images.githubusercontent.com/86872735/160408202-dd1b61ca-6a95-4739-8591-283a522b6299.png" width="50%"></p>
 
 Batch Normalization은 학습 샘플 x와 mini-batch 내의 다른 학습 샘플들에 의존한다. normalized activation x^k_hat은 변환의 내부에 있지만 그 존재는 매우 중요하다. 각 x^k_hat은 y = gamma * x + beta로 구성된 sub-network의 입력으로 볼 수 있으며 그 다음에는 원래의 network의 다른 처리가 뒤따른다. 따라서 그 입력은 모두 고정된 평균과 분산을 갖게 되며, 비록 결합분포는 학습 과정 중 변할 수 있지만 우리는 이로 인해 학습이 가속화 될 것이라고 예상한다. 
+
+학습 동안 loss의 gradient의 backpropagation을 진행해야 하고 BN transform의 parameter에 대한 gradient를 계산해야 한다. 
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/160576002-ec208b40-cf96-4e68-b201-f9cb9a509e14.png"></p>
+
+따라서 BN transform은 normalized activation을 network로 도입하는 normalized transform이다. 이것은 training 단계에서 layer가 더 적은 internal covariate shift를 나타내는 입력 분포를 학습하도록 보장하므로 training이 가속화된다. 게다가 학습되어 이런 normalized activation에 적용되는 affine tranform은 BN transform이 identity transform을 나타내도록 하며 network capacity를 보존한다.
+
+### 3.1 Training and Inference with Batch Normalized Networks
 
 
 
