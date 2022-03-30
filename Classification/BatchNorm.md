@@ -65,6 +65,19 @@ Batch Normalization은 학습 샘플 x와 mini-batch 내의 다른 학습 샘플
 따라서 BN transform은 normalized activation을 network로 도입하는 normalized transform이다. 이것은 training 단계에서 layer가 더 적은 internal covariate shift를 나타내는 입력 분포를 학습하도록 보장하므로 training이 가속화된다. 게다가 학습되어 이런 normalized activation에 적용되는 affine tranform은 BN transform이 identity transform을 나타내도록 하며 network capacity를 보존한다.
 
 ### 3.1 Training and Inference with Batch Normalized Networks
+Batch Normalization을 사용하는 모델은 batch size > 1인 mini-batch를 이용한 최적화 알고리즘으로 학습한다. mini-batch에 의존하는 activation의 normalization은 학습을 효율적으로 만들지만 추론 단계에서는 필요하지도, 바람직하지도 않다; 우리는 출력이 오직 입력에만 의존하기를 원한다. 따라서 network가 학습되고 나면, 우리는 mini-batch가 아닌 모집단을 이용하여 다음과 같이 normalization 한다.
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/160795341-a3a5b60c-31bf-4842-91f4-5c751976845c.png" width="20%"></p>
+  
+추론 단계에서는 평균과 분산이 고정되므로, normalization은 단순한 선형변환이 된다. scaling과 shift를 위한 gamma와 beta를 이용하여 BN을 대신할 single linear transform으로 구성될 수도 있다. 
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/160796265-4f7a1a9f-a2e7-4310-96ff-3c2675c0df03.png" width="50%"></p>
+
+### 3.2 Batch-Normalized Convolutional Networks
+이 절에서는 element-wise한 비선형성의 affine transformation으로 구성된 변환에 대해 이야기한다 - W와 b는 모델 parameter, g()는 sigmoid와 같은 비선형함수일 때의 z = g(W·u + b). 
+
+우리는 u를 normalize할 수도 있지만 u는 다른 비선형 함수의 출력이기 때문에 그 분포는 학습 동안 달라지며 u의 first and second moment를 제한하는 것은 covariate shift를 제거하지 못한다. 반면, W·u + b는 더 대칭적이고, non-sparse한 분포를 가지므로 이것을 normalize하면 안정적인 분포의 activation을 얻게 된다.
+
+우리는 W·u + b를 normalize하기 때문에, bias b의 효과는 이후의 mean subtraction에 의해 상쇄되며 따라서 b는 무시할 수 있다.
+
 
 
 
