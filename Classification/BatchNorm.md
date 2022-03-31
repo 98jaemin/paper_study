@@ -76,9 +76,41 @@ Batch Normalization을 사용하는 모델은 batch size > 1인 mini-batch를 �
 
 우리는 u를 normalize할 수도 있지만 u는 다른 비선형 함수의 출력이기 때문에 그 분포는 학습 동안 달라지며 u의 first and second moment를 제한하는 것은 covariate shift를 제거하지 못한다. 반면, W·u + b는 더 대칭적이고, non-sparse한 분포를 가지므로 이것을 normalize하면 안정적인 분포의 activation을 얻게 된다.
 
-우리는 W·u + b를 normalize하기 때문에, bias b의 효과는 이후의 mean subtraction에 의해 상쇄되며 따라서 b는 무시할 수 있다.
+우리는 W·u + b를 normalize하기 때문에, bias b의 효과는 이후의 mean subtraction에 의해 상쇄되며 따라서 b는 무시할 수 있다. 그러므로 z = g(W·u + b)를 x = W·u의 각 차원에 독립적으로 BN transform이 적용된 z = g(BN(W·u))로 대체한다.
 
+convolutional layer에 대해, 우리는 추가적으로 normalization이 convolutional property를 따르기를 바란다 - 그렇게 되면 동일한 feature map의 서로 다른 위치의 원소들이 같은 방식으로 normalize 된다. 이를 위해, 우리는 mini-batch의 모든 위치의 activation을 공동으로 normalize 한다. Alg. 1에서 feature map의 모든 값의 집합을 B라고 놓는다. 그리고 크기 m의 mini-batch와 pxq feature map에 대해 효율적인 mini-batch 크기로 m' = |B| = m·p·q를 사용한다. parameter 쌍 gamma와 beta는 매 activation이 아닌 매 feature map마다 학습한다. Alg 2.도 비슷하게 수정하여 inference 동안 BN transform은 주어진 feature map의 각 activation에 동일한 linear transformation을 적용한다.
 
+### 3.3 Batch Normalization enables higher learning rates
+Batch Normalization은 너무 큰 learning rate을 사용하여 발생하는 gradient explosion, vanishing 등의 문제를 해결하는데 도움을 준다. activation을 normalizing함으로써 parameter의 작은 변화가 크고 최적이 아닌 변화로 증폭되는 것을 방지한다.
+
+또한 Batch Normalization은 학습이 parameter scale에 대해 더 resilient하게 만든다. 일반적으로 큰 learning rate은 layer parameter의 scale을 키우고, 따라서 backpropagation 동안 gradient를 증폭하여 explosion을 야기한다. 그러나 Batch Normalization을 사용하면 backpropagation 동안 parameter의 scale에 영향을 받지 않는다. 
+
+게다가 우리는 Batch Normalization이 layer Jacobians의 특잇값이 1에 가까워지도록 한다고 추측하는데 이는 학습에 도움이 되는 것으로 알려져있다. 
+
+### 3.4 Batch Normalization regularizes the model
+Batch Normalization을 이용한 학습 과정에서, 학습 샘플이 mini-batch 내의 다른 샘플과 결합?(conjunction)을 이루는 것을 보았고, 학습 network는 더 이상 주어진 학습 샘플에 대해 결정론적인 값을 도출하지 않았다. 우리는 이 효과가 network의 일반화에 도움이 된다는 것을 알아냈다. overfitting을 줄이기 위해 Dropout이 주로 사용되는데, batch-normalized network에서는 Dropout을 제거하거나 그 강도를 줄여도 됨을 확인했다.
+
+## 4. Experiments
+### 4.1 Activations over time
+internal covariate shift의 영향과 Batch Normalization의 능력을 검증하기 위해 MNIST 데이터셋을 사용하였고, 100개의 activation을 갖는 3개의 fully-connected layer로 구성된 간단한 모델을 이용하였다. 각 hidden layer는 sigmoid를 이용하였고 weight는 Gaussian을 이용해 초기화하였다. EPOCH은 50,000, batch size는 60으로 학습하였다. 각 hidden layer마다 Batch Normalization을 추가하였다. 
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/160974703-5c898188-ec20-4b80-baf8-d7870f111783.png"></p>
+
+Figure 1(a)에서 볼 수 있듯, batch-normalized network가 더 빠르고 좋은 성능을 내었다. 그 이유를 찾기 위해 sigmoid의 input을 조사하였다. Figure 1(b, c)에 마지막 hidden layer의 하나의 activation의 분포가 어떻게 발전하는지 나타냈다. 일반 network(b)에서는, 학습의 진행에 따라 분포가 상당히 변화하며 이는 그 다음 layer에서의 학습을 복잡하게 한다. 반면 batch-normalized network(c)에서의 분포는 훨씬 안정적이고 이는 학습에 도움이 된다.
+
+## 4.2 ImageNet Classification
+우리는 Inception Network의 새로운 변형에 Batch Normalization을 적용하였다. 기존과의 가장 큰 차이는 5x5 convolutional layer 대신 두 개의 연속적인 3x3 convolution을 사용한다는 점이다. network는 13,600,000개의 parameter를 가지며 모든 convolution layer는 ReLU를 사용하며, softmax layer를 제외한 fully-connected layer는 없다. 이 모델을 이하 Inception이라 칭한다. 이 Inception 모델을 mini-batch size 32의 SGD로 학습시켰다. 
+
+실험에서 우리는 Batch Normalization을 이용한 Inception의 약간의 변형들을 평가하였다. 모든 경우 Batch Normalization은 각 non-linearity의 input에 적용되었다. 
+
+### 4.2.1 Accelerating BN Networks
+단순히 Batch Normalization을 추가하기만 하는 것은 그 장점을 완전히 이용하지 못한다. 따라서 우리는 network와 학습 parameter를 약간 변경하였다:
+- Increase learning rate
+- Remove Dropout
+- Reduce L2 weight regularization 
+- Accelerate learning rate decay
+- Remove Local Response Normalization
+- Shuffle training examples more thoroughly
+- Reduce the photometric distortions
 
 
 
