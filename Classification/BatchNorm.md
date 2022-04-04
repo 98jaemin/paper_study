@@ -107,10 +107,38 @@ Figure 1(a)에서 볼 수 있듯, batch-normalized network가 더 빠르고 좋�
 - Increase learning rate
 - Remove Dropout
 - Reduce L2 weight regularization 
-- Accelerate learning rate decay
+- Accelerate learning rate decay : 우리의 network가 Inception보다 빠르게 학습되었기 때문에, learning rate을 6배 빠르게 줄여나갔다.
 - Remove Local Response Normalization
 - Shuffle training examples more thoroughly
-- Reduce the photometric distortions
+- Reduce the photometric distortions : batch-normalized network의 학습이 빠르고 각 학습 샘플을 덜 관찰하므로, 우리는 학습기가 왜곡이 되지 않은 실제 이미지에 더 집중하도록 한다.
+
+### 4.2.2 Single-Network Classification
+LSVRC 2012 데이터를 이용하여 아래의 network들을 평가
+- Inception : §4.2에서 소개한 network, 초기 learning rate은 0.0015
+- BN-Baseline : Inception가 동일하되 각 nonlinearity 앞에 Batch Normalization 추가
+- BN-x5 : Inception + Batch Normalization + §4.2.1의 수정사항, 초기 learning rate은 0.0075
+- BN-x30 : BN-x5와 동일하되 초기 learning rate은 0.045
+- BN-x5-Sigmoid : BN-x5와 동일하되, ReLU 대신 Sigmoid
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/161465885-5f8808f8-c4ad-4ba6-9213-5bbb86cc8418.png" width="60%"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/161466044-2e2b162d-2bfb-4e61-a583-cf50d439a365.png" width="60%"></p>
+
+Figure 2에 각 network의 validation accuracy를 나타내었고 Inception은 31·10^6 step만에 72.2%를 달성하였다.
+Figure 3은 각 network가 72.2%를 달성하는데 걸린 step의 수와 최대 정확도를 나타내었다.
+Batch Normalization과 §4.2.1에서 소개한 수정사항을 적용하면 훨씬 빠르게 높은 정확도를 얻을 수 있음을 확인하였다. 또한 Batch Normalization은 Sigmoid의 학습의 어려움을 다소 해결할 수 있었다. Batch Normalization이 없으면, sigmoid를 사용한 Inception의 정확도는 0.1% 미만이다.
+
+### 4.2.3 Ensemble Classification
+6개의 network를 이용하여 앙상블하였다. 각각은 BN-x30을 기반으로 하였으며, convolutional layer의 weight 초깃값을 증가시키고 dropout을 추가하는 등 몇 가지 사항만 변경하였다. 각 network는 대략 6·10^6 step 이후 최대의 정확도를 얻었으며 앙상블 예측을 위해 각 class 확률값을 평균내었다. 그 결과 공식적인 최고 성능을 앞서는 결과를 얻을 수 있었다.
+</br>
+</br>
+
+## 5. Conclusion
+Batch Normalization은 학습을 복잡하게 만드는 covariate shift를 제거하면 학습에 도움이 된다는 것을 전제로 하여 시작했다. Batch Normalization은 어떤 최적화 알고리즘과도 적절히 사용될 수 있다. 그렇게 하기 위해 normalization을 각 mini-batch에 대해 진행하고, backpropagation에서 각 normalizatino parameter에 대해 gradient를 계산한다. Batch Normalization은 각 activation에 대해 단 2개의 parameter만을 추가하면서도 network의 표현력을 보존한다. 
+
+단순히 현재 state-of-the-art model에 Batch Normalization을 추가하는 것만으로도 학습의 속도를 높이며, learning rate를 키우고 dropout을 제거하는 등 몇 가지를 수정하면 훨씬 적은 step만에 현재의 성능에 도달한다. 게다가 Batch Normalization을 이용한 여러 모델을 결합하면 현재의 sota 모델을 상당한 격차로 앞서게 된다. 
+
+
+
+
 
 
 
