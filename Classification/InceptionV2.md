@@ -1,6 +1,6 @@
 > # Rethinking the Inception Architecture for Computer Vision
 > ### Christian Szegedy, Vincent Vanhoucke, Sergey Ioffe, Jonathon Shlens, Zbigniew Wojna (2015)
-
+</br>
 
 ## 1. Introduction
 AlexNet은 2012 ImageNet 대회에서 우승한 이후, object-detection, segmentation, human pose estimation, video classification, object tracking, superresolution과 같은 다양한 컴퓨터비전 분야에 성공적으로 적용되어 왔다. 그 이후 VGGNet이나 GoogLeNet과 같은 network들도 등장하여 높은 성능을 보여주었다. 
@@ -18,4 +18,12 @@ AlexNet은 2012 ImageNet 대회에서 우승한 이후, object-detection, segmen
 
 2. 더 높은 차원의 representation이 network 내에서 지역적으로 처리하기 더 쉽다. convolutional network의 tile마다 activation을 증가시키는 것은 더 많은 disentangled feature를 가능하게 한다.
 
-3. 낮은 차원의 embedding을 통해 표현력의 손실 없이(또는 거의 없이) spatial aggregation이 가능하다. 우리는 그 이유가, 인접한 유닛들 사이의 강한 상관관계가 차원 감소 동안 훨씬 적은 정보의 손실로 이어졌기 때문이라고 가설을 세웠다. 이러한 신호들은 쉽게 압축할 수 있기 때문에 차원의 감소는 학습 속도 또한 높여준다.
+3. 낮은 차원의 embedding을 통해 표현력의 손실 없이(또는 거의 없이) spatial aggregation이 가능하다. 우리는 그 이유가, 인접한 유닛들 사이의 강한 상관관계가 차원 감소 동안 훨씬 적은 정보의 손실로 이어졌기 때문이라고 가설을 세웠다. 이러한 신호들은 쉽게 압축할 수 있기 때문에 차원의 감소는 학습 속도 또한 높여준다. 
+
+4. network의 너비와 깊이의 균형을 맞춘다. 각 단계의 필터 수와 network의 깊이 사이의 균형을 맞춤으로써 최적의 성능에 도달할 수 있다. network의 깊이와 너비를 늘리는 것 모두 성능을 높이는데에 기여한다. 하지만 최적의 성능 개선은 그 둘이 병렬적으로 증가할 때에 이룰 수 있다. 따라서 computational budget은 network의 깊이와 너비에 고르게 분배되어야 한다.
+
+비록 이런 원리들이 성립하더라도, network의 성능 개선을 위해 이를 사용하는 것은 간단하지 않다. 아이디어는 애매한 상황에서만 신중하게 사용하자는 것이다.
+
+## 3. Factorizing Convolutions with Large Filter Size
+GoogLeNet network의 이점의 많은 부분은 dimension reduction의 넉넉한 사용으로부터 발생한다. 
+
