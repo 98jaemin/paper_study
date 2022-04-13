@@ -25,5 +25,12 @@ AlexNet은 2012 ImageNet 대회에서 우승한 이후, object-detection, segmen
 비록 이런 원리들이 성립하더라도, network의 성능 개선을 위해 이를 사용하는 것은 간단하지 않다. 아이디어는 애매한 상황에서만 신중하게 사용하자는 것이다.
 
 ## 3. Factorizing Convolutions with Large Filter Size
-GoogLeNet network의 이점의 많은 부분은 dimension reduction의 넉넉한 사용으로부터 발생한다. 
+GoogLeNet network의 이점의 많은 부분은 dimension reduction의 넉넉한 사용으로부터 발생한다. 이것은 효율적인 계산을 위해 convolution을 분해하는 것의 특별한 케이스로 볼 수 있다.
+
+여기서 우리는 계산의 효율성을 높이기 위한 다른 convolution 분해 방법을 탐색한다. Inception network는 fully convolutional이기 때문에, 각 가중치는 activation 당 하나의 연산에 대응된다. 그러므로 계산 비용의 감소는 parameter 수의 감소로 이어진다. 이것은, 적절한 분해를 통해 우리는 더 disentangled parameter를 얻을 수 있고 결국 더 빠른 학습을 이뤄낼 수 있음을 의미한다.
+
+### 3.1 Factorization into smaller convolutions
+큰 필터를 사용하는 convolution(e.g. 5x5, 7x7)은 계산비용이 불균형하게 높은 경향이 있다. 예를 들어, 5x5 convolution은 3x3에 비해 계산량이 2.78배 높다. 물론 5x5 필터는 초기 layer에서 더 먼 거리의 신호 간의 의존성을 포착할 수 있다. 하지만 우리는 5x5 convolution을, 더 적은 parameter를 갖는 multi-layer (mini) network로 대체할 수 있는지 묻고 싶다. 5x5 convolution의 계산을 들여다보면 이는 두 개의 layer를 가진 3x3 convolution으로 대체할 수 있다. 
+<p align="center"><img src="https://user-images.githubusercontent.com/86872735/163204531-c7cc39ab-a0db-417b-b854-90daab45c17c.png" width="40%"></p>
+
 
