@@ -41,8 +41,13 @@ GoogLeNet network의 이점의 많은 부분은 dimension reduction의 넉넉한
 이론적으로는, 모든 nxn convolution을 1xn -> nx1 convolution으로 할 수 있고, n이 커짐에 따라 계산량은 급격히 감소하게 된다. 그러나 실제로는, 초기 layer에서는 이러한 분해가 잘 동작하지 않는다는 것을 알아냈다. 하지만 적당한 사이즈(mxm feature map에 대해 m이 12~20일 때)에서는 좋은 결과를 낸다. 이때는 1x7과 7x1 convolution을 사용하여 매우 좋은 성능을 얻을 수 있다. 
 
 ## 4. Utility of Auxiliary Classifiers
-Inception architecture에서 auxiliary classifier를 제안했다. 그 목적은 더 낮은 layer에서 유용한 gradient를 푸시하고 vanishing gradient에 맞서 수렴을 돕는 것이다. 흥미롭게도 연구진은 auxiliary classifier가 학습의 빠른 수렴에는 도움이 되지 않는다는 것을 발견했다. network가 최고 정확도에 도달할 때까지 auxiliary classifier가 있든 없든 그 학습은 거의 동일하다. 학습이 막바지에 다다르면 auxiliary classifier를 적용한 network의 성능이 앞서나가고 최고점에 도달한다. 
+Inception V1에서 auxiliary classifier를 제안했다. 그 목적은 더 낮은 layer에서 유용한 gradient를 푸시하고 vanishing gradient에 맞서 수렴을 돕는 것이다. 흥미롭게도 연구진은 auxiliary classifier가 학습의 빠른 수렴에는 도움이 되지 않는다는 것을 발견했다. network가 최고 정확도에 도달할 때까지 auxiliary classifier가 있든 없든 그 학습은 거의 동일하다. 학습이 막바지에 다다르면 auxiliary classifier를 적용한 network의 성능이 앞서나가고 최고점에 도달한다. 
 
+또한 Inception V1은 network의 서로 다른 단계에서 two side-heads를 사용한다. 낮은 부분의 auxiliary 가지를 제거하는 것은 network의 최종 성능에 전혀 영향을 주지 않았다. 이는 해당 가지들이 low-level feature를 발전시키는데 도움을 준다는 Inception V1의 가설이 잘못되었음을 의미한다. 대신, 연구진은 auxiliary classifier가 regularizer의 역할을 한다고 주장한다. main classifier의 성능이, 주변 가지가 batch-normalized 되었거나 dropout layer를 포함할 때 더 좋다는 점이 이를 뒷받침한다. 
+</br>
+</br>
+
+## 5. Efficient Grid Size Reduction
 
 
 
