@@ -36,3 +36,21 @@ GoogLeNet network의 이점의 많은 부분은 dimension reduction의 넉넉한
 이러한 세팅은 인접한 타일 간에 weight를 공유하면서 parameter의 수를 줄여준다. 계산비용 절감에 대해 분석하기 위해, 일반적인 상황에 대한 몇 가지 단순화 가정을 설정한다. 우리는 n = alpha·m 이라고 가정하고, 상수 alpha에 의해 activation의 수를 변경하고자 한다. 5x5 convolution이 집계를 하므로, alpha는 일반적으로 1보다 조금 크다(GoogLeNet의 경우 1.5). 5x5 layer를 2개의 layer로 대체할 때, 이 확장은 두 단계로 나누어 진행된다: 각 단계에서 필터의 수를 sqrt(alpha)만큼 늘린다. 두 개의 3x3 convonlutional layer로 대체하면, 계산량을 28% 줄일 수 있다. 
 
 ### 3.2 Spatial Factorization into Asymmetric Convolutions
+위의 결과에 따르면 3x3보다 큰 필터의 convolution은 여러 개의 3x3 convolutional layer로 대신할 수 있으므로 일반적으로 덜 효율적이다. 그러면 더 작은, 예를 들어 2x2 convolution으로 분해하는 것이 더 좋은가에 대한 의문을 제기할 수 있다. 하지만 2x2 보다는 nx1과 같은 비대칭 convolution이 더 효과적인 것으로 밝혀졌다. 예를 들어, 3x1과 1x3 convolution을 차례로 사용하는 것은 3x3 convolution의 two-layer network와 동등하다. 하지만 input과 output 필터의 수가 같다면 two-layer의 계산비용이 33% 더 저렴하다. 3x3 convolution을 2개의 2x2 convolution으로 분해하면 계산량을 11%만 감소시킬 수 있다.
+
+이론적으로는, 모든 nxn convolution을 1xn -> nx1 convolution으로 할 수 있고, n이 커짐에 따라 계산량은 급격히 감소하게 된다. 그러나 실제로는, 초기 layer에서는 이러한 분해가 잘 동작하지 않는다는 것을 알아냈다. 하지만 적당한 사이즈(mxm feature map에 대해 m이 12~20일 때)에서는 좋은 결과를 낸다. 이때는 1x7과 7x1 convolution을 사용하여 매우 좋은 성능을 얻을 수 있다. 
+
+## 4. Utility of Auxiliary Classifiers
+Inception architecture에서 auxiliary classifier를 제안했다. 그 목적은 더 낮은 layer에서 유용한 gradient를 푸시하고 vanishing gradient에 맞서 수렴을 돕는 것이다. 흥미롭게도 연구진은 auxiliary classifier가 학습의 빠른 수렴에는 도움이 되지 않는다는 것을 발견했다. network가 최고 정확도에 도달할 때까지 auxiliary classifier가 있든 없든 그 학습은 거의 동일하다. 학습이 막바지에 다다르면 auxiliary classifier를 적용한 network의 성능이 앞서나가고 최고점에 도달한다. 
+
+
+
+
+
+
+
+
+
+
+
+
