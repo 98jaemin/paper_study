@@ -17,8 +17,8 @@
                       / [PyTorch Code](https://github.com/98jaemin/paper_study/blob/main/Classification/Inception_v3.ipynb)
                       / [NbViewer](https://nbviewer.org/github/98jaemin/paper_study/blob/main/Classification/Inception_v3.ipynb)
 * ResNet (2015) : [논문 리뷰](https://ohguri.tistory.com/9) 
-                / PyTorch Code 
-                / NbViewer
+                / [PyTorch Code](https://github.com/98jaemin/paper_study/blob/main/Classification/ResNet.ipynb)
+                / [NbViewer](https://nbviewer.org/github/98jaemin/paper_study/blob/main/Classification/ResNet.ipynb)
 
 ## 기타
 * BatchNormalization (2015) : [논문 리뷰](https://ohguri.tistory.com/8)
