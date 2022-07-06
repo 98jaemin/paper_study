@@ -19,6 +19,7 @@
 * ResNet (2015) : [논문 리뷰](https://ohguri.tistory.com/9) 
                 / [PyTorch Code](https://github.com/98jaemin/paper_study/blob/main/Classification/ResNet.ipynb)
                 / [NbViewer](https://nbviewer.org/github/98jaemin/paper_study/blob/main/Classification/ResNet.ipynb)
+* EfficientNet (2019) : [논문 리뷰](https://ohguri.tistory.com/11) 
 
 ## 기타
 * BatchNormalization (2015) : [논문 리뷰](https://ohguri.tistory.com/8)
